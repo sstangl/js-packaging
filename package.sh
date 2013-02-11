@@ -26,6 +26,7 @@ cd ..
 
 tar Jcf $BUILDDIR/js${PACKAGEVERSION}.tar.xz                                  \
   --exclude='.hg'                                                             \
+  --exclude='.git'                                                            \
   --exclude="*.orig"                                                          \
   --exclude="*.rej"                                                           \
   --transform s/${REPONAME}/${DIRNAME}/                                       \
