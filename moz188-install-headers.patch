@@ -1,0 +1,21 @@
+--- a/js/src/Makefile.in.orig	2012-12-31 00:26:16.924911000 +0100
++++ b/js/src/Makefile.in	2012-12-31 00:26:30.584910667 +0100
+@@ -939,6 +939,18 @@
+ install:: $(INSTALLED_HEADERS)
+ 	$(SYSINSTALL) $^ $(DESTDIR)$(includedir)/$(MODULE)
+ 
++install:: $(EXPORTS_ds)
++	$(SYSINSTALL) $^ $(DESTDIR)$(includedir)/$(MODULE)/ds
++
++install:: $(EXPORTS_gc)
++	$(SYSINSTALL) $^ $(DESTDIR)$(includedir)/$(MODULE)/gc
++
++install:: $(EXPORTS_js)
++	$(SYSINSTALL) $^ $(DESTDIR)$(includedir)/$(MODULE)
++
++install:: $(EXPORTS_mozilla)
++	$(SYSINSTALL) $^ $(DESTDIR)$(includedir)/$(MODULE)/mozilla
++
+ install:: $(SCRIPTS)
+ 	$(SYSINSTALL) $^ $(DESTDIR)$(bindir)
+ 
