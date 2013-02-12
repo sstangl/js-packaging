@@ -11,7 +11,7 @@ hg revert -a
 hg st -un | xargs rm
 
 
-PACKAGEVERSION=188-1.0.0
+PACKAGEVERSION=188-0.0.1
 PACKAGEFULLVERSION="${PACKAGEVERSION}~hg"$(date +%Y%m%d)".esr17."$(hg id -i | cut -c -8)
 
 patch -p1 < $BUILDDIR/moz188-libname-changes.patch
