@@ -42,4 +42,4 @@ tar cf ${TARFILE}                                                             \
 cd "$BUILDDIR"
 
 tar rf ${TARFILE} --transform "s#^#${DIRNAME}/#" patches
-gzip ${TARFILE}
+gzip -f ${TARFILE}
