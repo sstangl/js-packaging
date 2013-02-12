@@ -17,6 +17,7 @@ PACKAGEFULLVERSION="${PACKAGEVERSION}~hg"$(date +%Y%m%d)".esr17."$(hg id -i | cu
 patch -p1 < $BUILDDIR/moz188-libname-changes.patch
 patch -p1 < $BUILDDIR/moz188-fix-version.patch
 patch -p1 < $BUILDDIR/moz188-install-headers.patch
+patch -p1 < $BUILDDIR/bug835551-required-defines.patch
 
 cd js/src
 autoconf-2.13
