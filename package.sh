@@ -1,8 +1,7 @@
 #!/bin/bash
 
 DIRNAME="mozjs17"
-REPONAME="mozilla-esr17"
-REPODIR="$HOME/dev/${REPONAME}"
+REPODIR="$HOME/dev/mozilla-esr17"
 BUILDDIR=$(pwd)
 
 
@@ -41,7 +40,6 @@ cd js/src
 autoconf-2.13
 
 cd "$REPODIR"
-cd ..
 
 # Include files from mozilla repository.
 TARFILE="${BUILDDIR}/mozjs${PACKAGEVERSION}.tar"
@@ -49,11 +47,11 @@ tar cf ${TARFILE}                                                             \
   --exclude-vcs                                                               \
   --exclude="*.orig"                                                          \
   --exclude="*.rej"                                                           \
-  --transform s/${REPONAME}/${DIRNAME}/                                       \
-  ${REPONAME}/js/jsd                                                          \
-  ${REPONAME}/js/public                                                       \
-  ${REPONAME}/js/src                                                          \
-  ${REPONAME}/mfbt
+  --transform "s#^#${DIRNAME}/#"                                              \
+  js/jsd                                                                      \
+  js/public                                                                   \
+  js/src                                                                      \
+  mfbt
 
 cd "$BUILDDIR"
 
