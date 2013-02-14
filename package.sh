@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIRNAME="js17"
+DIRNAME="mozjs17"
 REPONAME="mozilla-esr17"
 REPODIR="$HOME/dev/${REPONAME}"
 BUILDDIR=$(pwd)
@@ -8,10 +8,8 @@ BUILDDIR=$(pwd)
 
 cd "$REPODIR"
 
-hg revert -a -C
+hg revert -a
 hg st -un | xargs rm
-find -name *.rej -delete
-find -name *.orig -delete
 
 PACKAGEVERSION=17-0.0.1
 PACKAGEFULLVERSION="${PACKAGEVERSION}~hg"$(date +%Y%m%d)".esr17."$(hg id -i | cut -c -8)
@@ -50,7 +48,7 @@ cd "$REPODIR"
 cd ..
 
 # Include files from mozilla repository.
-TARFILE="${BUILDDIR}/js${PACKAGEVERSION}.tar"
+TARFILE="${BUILDDIR}/mozjs${PACKAGEVERSION}.tar"
 tar cf ${TARFILE}                                                             \
   --exclude-vcs                                                               \
   --exclude="*.orig"                                                          \
