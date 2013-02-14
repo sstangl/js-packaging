@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# hg revision against which the patches are intended to apply.
+HGREV="9968e83f2959"
+
 DIRNAME="mozjs17"
 REPODIR="$HOME/dev/mozilla-esr17"
 BUILDDIR=$(pwd)
@@ -7,11 +10,16 @@ BUILDDIR=$(pwd)
 
 cd "$REPODIR"
 
+CURHG=`hg log -r tip | head -n 1 | cut -d ' ' -f 4 | cut -d ':' -f 2`
+if [ "${CURHG}" != "${HGREV}" ]; then
+	echo "-repository at unexpected revision (got ${CURHG}, expected ${HGREV})."
+	exit 1
+fi
+
 hg revert -a
 hg st -un | xargs rm
 
 PACKAGEVERSION=17-0.0.1
-PACKAGEFULLVERSION="${PACKAGEVERSION}~hg"$(date +%Y%m%d)".esr17."$(hg id -i | cut -c -8)
 
 function apply {
 	echo +Applying ${1}
@@ -19,12 +27,13 @@ function apply {
 	if (( $? )); then echo -failed to apply ${1}; exit 1; fi
 }
 
-apply bug838915-JS_STANDALONE.patch # Landed on m-c, might need landing on esr17
+apply bug838915-JS_STANDALONE.patch # approval-mozilla-esr17?
 apply bug835551-required-defines.patch # Landed on m-c, needs green try run + landing on esr17
 apply bug831552-install-headers.patch # approval-mozilla-esr17?
 
 apply bug809430-add-symbol-versions.patch # r+, needs landing on m-i. Unneeded?
 
+# Bug 812265 requires updating to use JS_STANDALONE.
 apply bug812265-bump-JS_VERSION.patch # r+, carrying rebased version, needs landing on esr17
 apply bug812265-fix-version.patch # Tag-along patch to JS_VERSION bump.
 apply bug812265-REAL_LIBRARY.patch # Unreviewed.
