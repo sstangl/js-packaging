@@ -1,0 +1,38 @@
+From a1d8870fdee66658621f0e5498745280f309cfbf Mon Sep 17 00:00:00 2001
+From: Tim Lunn <tim@feathertop.org>
+Date: Sat, 2 Feb 2013 09:20:18 +1100
+Subject: [PATCH 05/24] backport _TARGET rule
+
+---
+ js/src/config/rules.mk | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/js/src/config/rules.mk b/js/src/config/rules.mk
+index 78ad302..c0c4c10 100644
+--- a/js/src/config/rules.mk
++++ b/js/src/config/rules.mk
+@@ -1630,17 +1630,17 @@ endif
+ # FOO_DEST := target_path
+ # INSTALL_TARGETS += FOO
+ define install_file_template
+-libs:: $(2)/$(notdir $(1))
++$(or $(3),libs):: $(2)/$(notdir $(1))
+ $(2)/$(notdir $(1)): $(1) $$(call mkdir_deps,$(2))
+-	$(INSTALL) $(3) $$< $${@D}
++	$(INSTALL) $(4) $$< $${@D}
+ endef
+ $(foreach category,$(INSTALL_TARGETS),\
+   $(if $($(category)_DEST),,$(error Missing $(category)_DEST))\
+   $(foreach file,$($(category)_FILES),\
+-    $(eval $(call install_file_template,$(file),$($(category)_DEST),$(IFLAGS1)))\
++    $(eval $(call install_file_template,$(file),$($(category)_DEST),$($(category)_TARGET),$(IFLAGS1)))\
+   )\
+   $(foreach file,$($(category)_EXECUTABLES),\
+-    $(eval $(call install_file_template,$(file),$($(category)_DEST),$(IFLAGS2)))\
++    $(eval $(call install_file_template,$(file),$($(category)_DEST),$($(category)_TARGET),$(IFLAGS2)))\
+   )\
+ )
+ 
+-- 
+1.8.1.2
+

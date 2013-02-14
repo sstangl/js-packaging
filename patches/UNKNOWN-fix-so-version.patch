@@ -1,68 +1,81 @@
+From 194018d7dc67823ef8dec5d42211073be0589d21 Mon Sep 17 00:00:00 2001
+From: Tim Lunn <tim@feathertop.org>
+Date: Sat, 2 Feb 2013 10:25:58 +1100
+Subject: [PATCH 20/24] Correct versioning of installed shared library.
+
+To be distro-friendly shared libraries should have a version suffix
+that indicates ABI/API compatibility.
+
+This was lifted from previous libname patches from the js185 release,
+with only minor changes.
+---
+ js/src/Makefile.in | 53 +++++++++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 49 insertions(+), 4 deletions(-)
+
 diff --git a/js/src/Makefile.in b/js/src/Makefile.in
-index 2d3ee7e..03e2a45 100755
+index 01fe895..913c254 100644
 --- a/js/src/Makefile.in
 +++ b/js/src/Makefile.in
-@@ -33,8 +33,15 @@ endif
+@@ -33,9 +33,23 @@ endif
  
  TEST_DIRS += tests
  
-+SRCREL_VERSION      = 1.0.0
-+SRCREL_ABI_VERSION  := $(word 1,$(subst ., ,$(SRCREL_VERSION))).$(word 2,$(subst ., ,$(SRCREL_VERSION)))
++SRCREL_VERSION      = 0.0.0
++SRCREL_ABI_VERSION  := $(word 1,$(subst ., ,$(SRCREL_VERSION)))
 +
  MODULE		    = js
--LIBRARY_NAME	    = mozjs
-+ifeq (,$(HOST_BIN_SUFFIX))
-+LIBRARY_NAME	    = mozjs188
-+else
-+LIBRARY_NAME	    = mozjs188-$(SRCREL_ABI_VERSION)
-+endif
+-LIBRARY_NAME	    = mozjs-@MOZJS_MAJOR_VERSION@.@MOZJS_MINOR_VERSION@@MOZJS_ALPHA@
++ifndef JS_STANDALONE
++LIBRARY_NAME	    = mozjs
  STATIC_LIBRARY_NAME = js_static
++else
++LIBRARY_BASE = mozjs-@MOZJS_MAJOR_VERSION@.@MOZJS_MINOR_VERSION@@MOZJS_ALPHA@
++ifneq ($(OS_ARCH),WINNT)
++LIBRARY_NAME	    = $(LIBRARY_BASE)
++else
++LIBRARY_NAME	    = $(LIBRARY_BASE)-$(SRCREL_ABI_VERSION)
++endif
++STATIC_LIBRARY_NAME = $(LIBRARY_BASE)-$(SRCREL_ABI_VERSION)
++endif
++
  GRE_MODULE	    = 1
  
-@@ -726,6 +733,7 @@ endif
+ LIBS		= $(NSPR_LIBS)
+@@ -737,7 +751,11 @@ endif
  # - OS_LIBS includes libraries selected by the configure script.
  # - EXTRA_LIBS includes libraries selected by this Makefile.
  JS_CONFIG_LIBS=$(EXTRA_DSO_LDOPTS) $(OS_LIBS) $(EXTRA_LIBS)
+-
++ifdef GNU_CC
 +JS_CONFIG_MOZ_JS_LIBS=-L$(libdir) -l$(LIBRARY_NAME)
- 
++else
++JS_CONFIG_MOZ_JS_LIBS=$(libdir)/$(LIBRARY_NAME).lib
++endif
  # The configure script invokes this rule explicitly at configure time!
  # It's important that js-config be ready by the time we're done
-@@ -751,24 +759,70 @@ js-config: js-config.in Makefile $(DEPTH)/config/autoconf.mk $(topsrcdir)/config
- 	-e 's|$(at)LIBRARY_NAME$(at)|$(LIBRARY_NAME)|' \
- 	-e 's|$(at)NSPR_CFLAGS$(at)|$(NSPR_CFLAGS)|' \
- 	-e 's|$(at)JS_CONFIG_LIBS$(at)|$(JS_CONFIG_LIBS)|' \
--	-e 's|$(at)MOZ_JS_LIBS$(at)|$(MOZ_JS_LIBS)|' \
-+	-e 's|$(at)MOZ_JS_LIBS$(at)|$(JS_CONFIG_MOZ_JS_LIBS)|' \
- 	&& mv js-config.tmp $@ && chmod +x $@
+ # configuring, because we may be running other configure scripts that
+@@ -761,7 +779,7 @@ JS_CONFIG_SUBSTITUTIONS=\
+ 	-DMOZILLA_VERSION="$(MOZILLA_VERSION)" \
+ 	-DLIBRARY_NAME="$(LIBRARY_NAME)" \
+ 	-DJS_CONFIG_LIBS="$(JS_CONFIG_LIBS)" \
+-	-DMOZ_JS_LIBS="$(MOZ_JS_LIBS)" \
++	-DMOZ_JS_LIBS="$(JS_CONFIG_MOZ_JS_LIBS)" \
+ 	-DMOZJS_MAJOR_VERSION="$(MOZJS_MAJOR_VERSION)" \
+ 	-DMOZJS_MINOR_VERSION="$(MOZJS_MINOR_VERSION)" \
+ 	-DMOZJS_PATCH_VERSION="$(MOZJS_PATCH_VERSION)" \
+@@ -781,7 +799,6 @@ SDK_BINARY = js-config
+ $(LIBRARY_NAME).pc: js.pc.in js-config
+ 	$(PYTHON) $(topsrcdir)/config/Preprocessor.py $(JS_CONFIG_SUBSTITUTIONS) $< > $@
  
- SCRIPTS = js-config
- SDK_BINARY = js-config
- 
-+pkg_config_files = \
-+	mozjs188.pc \
-+	$(NULL)
-+
-+GARBAGE += $(pkg_config_files)
-+
-+%.pc: $(srcdir)/%.pc.in Makefile
-+	cat $< | sed \
-+	-e "s|%prefix%|$(prefix)|" \
-+	-e "s|%includedir%|$(includedir)|" \
-+	-e "s|%libdir%|$(libdir)|" \
-+	-e 's|%MOZILLA_VERSION%|$(MOZILLA_VERSION)|' \
-+	> $@ && chmod 644 $@
-+
-+install:: $(pkg_config_files)
-+	@echo pkg_config_file: $(pkg_config_files)
-+	$(SYSINSTALL) $(IFLAGS1) $^ $(DESTDIR)$(libdir)/pkgconfig
-+
+-
  install:: $(INSTALLED_HEADERS)
- 	$(SYSINSTALL) $^ $(DESTDIR)$(includedir)/$(MODULE)
+ 	$(SYSINSTALL) $^ $(DESTDIR)$(includedir)/$(LIBRARY_NAME)
  
+@@ -800,12 +817,40 @@ install:: $(EXPORTS_mozilla)
  install:: $(SCRIPTS)
  	$(SYSINSTALL) $^ $(DESTDIR)$(bindir)
  
-+ifeq (,$(HOST_BIN_SUFFIX))
++ifneq ($(OS_ARCH),WINNT)
 +ifeq (.dylib,$(DLL_SUFFIX))
 +# Mac OS X
 +SHLIB_ANY_VER   := $(DESTDIR)$(libdir)/$(SHARED_LIBRARY)
@@ -80,17 +93,17 @@ index 2d3ee7e..03e2a45 100755
 +endif
 +endif
 +
++
  install:: $(LIBRARY) $(SHARED_LIBRARY) $(IMPORT_LIBRARY)
  ifneq (,$(LIBRARY))
  	$(SYSINSTALL) $(LIBRARY) $(DESTDIR)$(libdir)
-+	mv -f $(DESTDIR)$(libdir)/$(LIBRARY) $(subst $(STATIC_LIBRARY_NAME),mozjs188-$(SRCREL_ABI_VERSION),$(DESTDIR)$(libdir)/$(LIBRARY))
  endif
  ifneq (,$(SHARED_LIBRARY))
-+ifeq (,$(HOST_BIN_SUFFIX))
++ifneq ($(OS_ARCH),WINNT)
 +	@[ ! -h $(SHLIB_ANY_VER) ] || rm -f $(SHLIB_ANY_VER)
 +endif
  	$(SYSINSTALL) $(SHARED_LIBRARY) $(DESTDIR)$(libdir)
-+ifeq (,$(HOST_BIN_SUFFIX))
++ifneq ($(OS_ARCH),WINNT)
 +	mv -f $(SHLIB_ANY_VER) $(SHLIB_EXACT_VER)
 +	@[ ! -h $(SHLIB_ABI_VER) ] || rm -f $(SHLIB_ABI_VER)
 +	ln -s $(notdir $(SHLIB_EXACT_VER)) $(SHLIB_ABI_VER)
@@ -99,19 +112,6 @@ index 2d3ee7e..03e2a45 100755
  endif
  ifneq (,$(IMPORT_LIBRARY))
  	$(SYSINSTALL) $(IMPORT_LIBRARY) $(DESTDIR)$(libdir)
-diff --git a/js/src/mozjs188.pc.in b/js/src/mozjs188.pc.in
-new file mode 100644
-index 0000000..a309aa4
---- /dev/null
-+++ b/js/src/mozjs188.pc.in
-@@ -0,0 +1,10 @@
-+prefix=%prefix%
-+libdir=%libdir%
-+includedir=%includedir%
-+
-+Name: SpiderMonkey 1.8.8
-+Description: The Mozilla library for JavaScript 1.8.8
-+Version: %MOZILLA_VERSION%
-+Requires: nspr >= 4.9.2
-+Libs: -L${libdir} -lmozjs188
-+Cflags: -I${includedir}/js
+-- 
+1.8.1.2
+

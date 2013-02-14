@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIRNAME="js-1.8.8"
+DIRNAME="js17"
 REPONAME="mozilla-esr17"
 REPODIR="$HOME/dev/${REPONAME}"
 BUILDDIR=$(pwd)
@@ -8,18 +8,40 @@ BUILDDIR=$(pwd)
 
 cd "$REPODIR"
 
-hg revert -a
+hg revert -a -C
 hg st -un | xargs rm
+find -name *.rej -delete
+find -name *.orig -delete
 
-
-PACKAGEVERSION=188-0.0.1
+PACKAGEVERSION=17-0.0.1
 PACKAGEFULLVERSION="${PACKAGEVERSION}~hg"$(date +%Y%m%d)".esr17."$(hg id -i | cut -c -8)
 
-patch -p1 < $BUILDDIR/patches/moz188-libname-changes.patch
-patch -p1 < $BUILDDIR/patches/moz188-fix-version.patch
-patch -p1 < $BUILDDIR/patches/bug831552-install-headers.patch
-patch -p1 < $BUILDDIR/patches/bug835551-required-defines.patch
-patch -p1 < $BUILDDIR/patches/quell-common-warnings.patch
+function apply {
+	echo +Applying ${1}
+	patch -p1 < ${BUILDDIR}/patches/${1}
+	if (( $? )); then echo -failed to apply ${1}; exit 1; fi
+}
+
+apply bug838915-JS_STANDALONE.patch # Landed on m-c, might need landing on esr17
+apply bug835551-required-defines.patch # Landed on m-i, needs landing on esr17
+apply bug831552-install-headers.patch # Landed on m-i, needs landing on esr17
+
+apply bug809430-add-symbol-versions.patch # r+, needs landing on m-i. Unneeded?
+
+apply bug812265-bump-JS_VERSION.patch # r+, carrying rebased version, needs landing on esr17
+apply bug812265-fix-version.patch # Tag-along patch to JS_VERSION bump.
+apply bug812265-REAL_LIBRARY.patch # Unreviewed.
+apply bug812265-versioned-MOZ_JS_LIBS.patch # Unreviewed.
+apply bug812265-setup-versioning.patch # Needs work. Rebased locally over 831552.
+
+apply UNKNOWN-backport-_TARGET-rule.patch # Needs bug/review.
+apply UNKNOWN-dont-install-lib.a.desc.patch # Needs bug/review.
+apply UNKNOWN-use-STATIC_LIBRARY_NAME.patch # Needs bug/review.
+
+#apply UNKNOWN-fix-so-version.patch # Invalid; needs rebasing.
+#apply UNKNOWN-fix-pkgconfig-file.patch # Missing js.pc.in
+
+apply quell-common-warnings.patch # Could be landed, but we can carry it separately.
 
 cd js/src
 autoconf-2.13
