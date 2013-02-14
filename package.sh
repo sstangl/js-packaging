@@ -20,8 +20,8 @@ function apply {
 }
 
 apply bug838915-JS_STANDALONE.patch # Landed on m-c, might need landing on esr17
-apply bug835551-required-defines.patch # Landed on m-i, needs landing on esr17
-apply bug831552-install-headers.patch # Landed on m-i, needs landing on esr17
+apply bug835551-required-defines.patch # Landed on m-c, needs green try run + landing on esr17
+apply bug831552-install-headers.patch # approval-mozilla-esr17?
 
 apply bug809430-add-symbol-versions.patch # r+, needs landing on m-i. Unneeded?
 
