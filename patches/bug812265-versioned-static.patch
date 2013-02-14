@@ -1,0 +1,24 @@
+From 396c8f07585be01e48241d6a7c387793a14610da Mon Sep 17 00:00:00 2001
+From: Tim Lunn <tim@feathertop.org>
+Date: Fri, 15 Feb 2013 08:23:16 +1100
+Subject: [PATCH] Install versioned static library
+
+---
+ js/src/Makefile.in | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/js/src/Makefile.in b/js/src/Makefile.in
+index 2a0f7fa..df87663 100644
+--- a/js/src/Makefile.in
++++ b/js/src/Makefile.in
+@@ -861,6 +861,7 @@ install:: $(SCRIPTS)
+ install:: $(REAL_LIBRARY) $(SHARED_LIBRARY) $(IMPORT_LIBRARY)
+ ifneq (,$(REAL_LIBRARY))
+ 	$(SYSINSTALL) $(REAL_LIBRARY) $(DESTDIR)$(libdir)
++	mv -f $(DESTDIR)$(libdir)/$(REAL_LIBRARY) $(subst $(STATIC_LIBRARY_NAME),$(LIBRARY_NAME),$(DESTDIR)$(libdir)/$(REAL_LIBRARY))
+ endif
+ ifneq (,$(SHARED_LIBRARY))
+ 	$(SYSINSTALL) $(SHARED_LIBRARY) $(DESTDIR)$(libdir)
+-- 
+1.8.1.2
+

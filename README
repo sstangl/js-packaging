@@ -1,1 +1,4 @@
 Scripts from http://people.ubuntu.com/~ricotz/mozjs/
+
+Known Issues:
+  - There is a leftover timestamp installed to $(libdir)/pkgconfig/.mkdir.done
