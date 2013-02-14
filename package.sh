@@ -33,8 +33,8 @@ apply bug812265-fix-version.patch # Tag-along patch to JS_VERSION bump.
 apply bug812265-REAL_LIBRARY.patch # Unreviewed.
 apply bug812265-versioned-MOZ_JS_LIBS.patch # Unreviewed.
 apply bug812265-setup-versioning.patch # Needs work. Rebased locally over 831552.
+apply bug784262-backport-_TARGET-rule.patch # Landed on m-c; part of 812265 for esr17. Should be part of setup-versioning patch.
 
-apply UNKNOWN-backport-_TARGET-rule.patch # Needs bug/review.
 apply UNKNOWN-dont-install-lib.a.desc.patch # Needs bug/review.
 apply UNKNOWN-use-STATIC_LIBRARY_NAME.patch # Needs bug/review.
 
