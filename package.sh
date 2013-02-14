@@ -31,7 +31,7 @@ apply bug812265-REAL_LIBRARY.patch # Unreviewed.
 apply bug812265-versioned-MOZ_JS_LIBS.patch # Unreviewed.
 apply bug812265-setup-versioning.patch # Needs work. Rebased locally over 831552.
 apply bug784262-backport-_TARGET-rule.patch # Landed on m-c; part of 812265 for esr17. Should be part of setup-versioning patch.
-
+apply bug812265-versioned-static.patch #Unreviewed. Should be part of setup-versioning patch.
 #apply UNKNOWN-fix-pkgconfig-file.patch # oops this was merged locally into 'setup-versioning'
 
 apply quell-common-warnings.patch # Could be landed, but we can carry it separately.
