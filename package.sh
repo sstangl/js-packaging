@@ -35,11 +35,11 @@ apply bug812265-versioned-MOZ_JS_LIBS.patch # Unreviewed.
 apply bug812265-setup-versioning.patch # Needs work. Rebased locally over 831552.
 apply bug784262-backport-_TARGET-rule.patch # Landed on m-c; part of 812265 for esr17. Should be part of setup-versioning patch.
 
-apply UNKNOWN-dont-install-lib.a.desc.patch # Needs bug/review.
-apply UNKNOWN-use-STATIC_LIBRARY_NAME.patch # Needs bug/review.
+#apply UNKNOWN-fix-so-version.patch # Invalid; it was decided not needed.
+#apply UNKNOWN-dont-install-lib.a.desc.patch # No longer needed
+#apply UNKNOWN-use-STATIC_LIBRARY_NAME.patch # No longer needed.
 
-#apply UNKNOWN-fix-so-version.patch # Invalid; needs rebasing.
-#apply UNKNOWN-fix-pkgconfig-file.patch # Missing js.pc.in
+#apply UNKNOWN-fix-pkgconfig-file.patch # oops this was merged locally into 'setup-versioning'
 
 apply quell-common-warnings.patch # Could be landed, but we can carry it separately.
 
