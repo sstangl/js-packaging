@@ -65,4 +65,6 @@ tar cf ${TARFILE}                                                             \
 cd "$BUILDDIR"
 
 tar rf ${TARFILE} --transform "s#^#${DIRNAME}/#" patches
+tar rf ${TARFILE} --transform "s#^#${DIRNAME}/#" LICENSE
+
 gzip -f ${TARFILE}
