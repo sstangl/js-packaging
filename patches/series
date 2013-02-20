@@ -5,11 +5,12 @@ bug831552-install-headers.patch # approval-mozilla-esr17?
 bug809430-add-symbol-versions.patch # r+, needs landing on m-i. Unneeded?
 
 bug812265-bump-JS_VERSION.patch # r+, carrying rebased version, needs landing on esr17
-#bug812265-fix-version.patch # Tag-along patch to JS_VERSION bump.
-bug812265-setup-versioning_3.patch # Unreviewed. 
-bug812265-versioned-MOZ_JS_LIBS_2.patch # Unreviewed.
-bug812265-versioned-js-config.patch #Unrevied
-bug842889-fix-version.patch #Unreviewd.
+
+bug812265-setup-versioning_3.patch # r? glandium.
+bug812265-versioned-MOZ_JS_LIBS_2.patch # r? glandium.
+bug812265-versioned-js-config.patch # r? glandium.
+
+bug842889-fix-version.patch # No flags.
 
 quell-common-warnings.patch # Could be landed, but we can carry it separately.
 
