@@ -1,0 +1,78 @@
+From b8c282a366118ea3d1d7f96cf374e5207d5c4dcf Mon Sep 17 00:00:00 2001
+From: Tim Lunn <tim@feathertop.org>
+Date: Wed, 20 Feb 2013 15:33:26 +1100
+Subject: [PATCH] add versioning to js-config
+
+---
+ js/src/Makefile.in  | 12 ++++++------
+ js/src/configure.in |  4 +++-
+ 2 files changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/js/src/Makefile.in b/js/src/Makefile.in
+index 28588dd..0c8f6e8 100644
+--- a/js/src/Makefile.in
++++ b/js/src/Makefile.in
+@@ -854,15 +854,15 @@ JS_CONFIG_SUBSTITUTIONS=\
+ 	-DNSPR_CFLAGS="$(NSPR_CFLAGS)" \
+ 	-DNSPR_PKGCONF_CHECK="$(NSPR_PKGCONF_CHECK)"
+ 
+-js-config: js-config.in Makefile $(DEPTH)/config/autoconf.mk $(topsrcdir)/config/config.mk $(topsrcdir)/config/rules.mk
++$(JS_CONFIG_NAME): js-config.in Makefile $(DEPTH)/config/autoconf.mk $(topsrcdir)/config/config.mk $(topsrcdir)/config/rules.mk
+ 	$(RM) $@.tmp
+ 	$(PYTHON) $(topsrcdir)/config/Preprocessor.py $(JS_CONFIG_SUBSTITUTIONS) $< > $@.tmp \
+-	&& mv js-config.tmp $@ && chmod +x $@
++	&& mv $(JS_CONFIG_NAME).tmp $@ && chmod +x $@
+ 
+-SCRIPTS = js-config
+-SDK_BINARY = js-config
++SCRIPTS = $(JS_CONFIG_NAME)
++SDK_BINARY = $(JS_CONFIG_NAME)
+ 
+-$(LIBRARY_NAME).pc: js.pc.in js-config
++$(LIBRARY_NAME).pc: js.pc.in $(JS_CONFIG_NAME)
+ 	$(PYTHON) $(topsrcdir)/config/Preprocessor.py $(JS_CONFIG_SUBSTITUTIONS) $< > $@
+ 
+ install:: $(LIBRARY_NAME).pc
+@@ -946,7 +946,7 @@ endif
+ ifneq (,$(IMPORT_LIBRARY))
+ 	$(SYSINSTALL) $(IMPORT_LIBRARY) $(DESTDIR)$(libdir)
+ endif
+-	$(MAKE) -C shell install
++	$(MAKE) -C shell
+ 
+ # Extra dependencies and rules for auto-generated headers
+ host_jskwgen.$(OBJ_SUFFIX): jsversion.h vm/Keywords.h
+diff --git a/js/src/configure.in b/js/src/configure.in
+index df95e37..4b7edad 100644
+--- a/js/src/configure.in
++++ b/js/src/configure.in
+@@ -233,6 +233,7 @@ MOZJS_MAJOR_VERSION=`echo $MOZILLA_VERSION | sed "s|\(^[0-9]*\)\.[0-9]*.*|\1|"`
+ MOZJS_MINOR_VERSION=`echo $MOZILLA_VERSION | sed "s|^[0-9]*\.\([0-9]*\).*|\1|"`
+ MOZJS_PATCH_VERSION=`echo $MOZILLA_VERSION | sed "s|^[0-9]*\.[0-9]*[^0-9]*||"`
+ IS_ALPHA=`echo $MOZILLA_VERSION | grep [ab]`
++JS_CONFIG_NAME=js$MOZJS_MAJOR_VERSION-config
+ changequote([,])
+ if test -n "$IS_ALPHA"; then
+   changequote(,)
+@@ -241,6 +242,7 @@ if test -n "$IS_ALPHA"; then
+ fi
+ AC_DEFINE_UNQUOTED(MOZJS_MAJOR_VERSION,"$MOZJS_MAJOR_VERSION")
+ AC_DEFINE_UNQUOTED(MOZJS_MINOR_VERSION,"$MOZJS_MINOR_VERSION")
++AC_SUBST(JS_CONFIG_NAME)
+ AC_SUBST(MOZJS_MAJOR_VERSION)
+ AC_SUBST(MOZJS_MINOR_VERSION)
+ AC_SUBST(MOZJS_PATCH_VERSION)
+@@ -4394,7 +4396,7 @@ AC_OUTPUT($MAKEFILES)
+ # Produce the js-config script at configure time; see the comments for
+ # 'js-config' in Makefile.in.
+ AC_MSG_RESULT(invoking $MAKE to create js-config script)
+-$MAKE js-config
++$MAKE $JS_CONFIG_NAME
+ 
+ # Build jsctypes if it's enabled.
+ if test "$JS_HAS_CTYPES" -a -z "$MOZ_NATIVE_FFI"; then
+-- 
+1.8.1.2
+
+
+
