@@ -1,0 +1,15 @@
+bug838915-JS_STANDALONE.patch # approval-mozilla-esr17?
+bug835551-required-defines.patch # Landed on m-c, needs green try run + landing on esr17
+bug831552-install-headers.patch # approval-mozilla-esr17?
+
+bug809430-add-symbol-versions.patch # r+, needs landing on m-i. Unneeded?
+
+bug812265-bump-JS_VERSION.patch # r+, carrying rebased version, needs landing on esr17
+#bug812265-fix-version.patch # Tag-along patch to JS_VERSION bump.
+bug812265-setup-versioning_3.patch # Unreviewed. 
+bug812265-versioned-MOZ_JS_LIBS_2.patch # Unreviewed.
+bug812265-versioned-js-config.patch #Unrevied
+bug842889-fix-version.patch #Unreviewd.
+
+quell-common-warnings.patch # Could be landed, but we can carry it separately.
+
