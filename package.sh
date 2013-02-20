@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # hg revision against which the patches are intended to apply.
-HGREV="9968e83f2959"
+HGREV="757cf20a83c6"
 
 DIRNAME="mozjs17"
 REPODIR="$HOME/dev/mozilla-esr17"
