@@ -18,35 +18,14 @@ fi
 
 hg revert -a
 hg st -un | xargs rm
+rm -rf .pc
+PACKAGEVERSION=17-0.0.2
 
-PACKAGEVERSION=17-0.0.1
-
-function apply {
-	echo +Applying ${1}
-	patch -p1 < ${BUILDDIR}/patches/${1}
-	if (( $? )); then echo -failed to apply ${1}; exit 1; fi
-}
-
-apply bug838915-JS_STANDALONE.patch # approval-mozilla-esr17?
-apply bug835551-required-defines.patch # Landed on m-c, needs green try run + landing on esr17
-apply bug831552-install-headers.patch # approval-mozilla-esr17?
-
-apply bug809430-add-symbol-versions.patch # r+, needs landing on m-i. Unneeded?
-
-# Bug 812265 requires updating to use JS_STANDALONE.
-apply bug812265-bump-JS_VERSION.patch # r+, carrying rebased version, needs landing on esr17
-apply bug812265-fix-version.patch # Tag-along patch to JS_VERSION bump.
-apply bug812265-REAL_LIBRARY.patch # Unreviewed.
-apply bug812265-versioned-MOZ_JS_LIBS.patch # Unreviewed.
-apply bug812265-setup-versioning.patch # Needs work. Rebased locally over 831552.
-apply bug784262-backport-_TARGET-rule.patch # Landed on m-c; part of 812265 for esr17. Should be part of setup-versioning patch.
-apply bug812265-versioned-static.patch #Unreviewed. Should be part of setup-versioning patch.
-#apply UNKNOWN-fix-pkgconfig-file.patch # oops this was merged locally into 'setup-versioning'
-
-apply quell-common-warnings.patch # Could be landed, but we can carry it separately.
+QUILT_PATCHES="$BUILDDIR/patches" quilt push -a
+if (( $? )); then echo -failed to apply patches; exit 1; fi
 
 cd js/src
-autoconf-2.13
+[ autoconf-2.13 ] || autoconf2.13
 
 cd "$REPODIR"
 
