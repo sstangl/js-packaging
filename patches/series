@@ -13,4 +13,5 @@ bug812265-versioned-js-config.patch # r? glandium.
 bug842889-fix-version.patch # No flags.
 
 quell-common-warnings.patch # Could be landed, but we can carry it separately.
+quell-jsversion-warning.patch # Should not be landed.
 
