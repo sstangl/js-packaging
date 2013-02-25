@@ -1,18 +1,19 @@
-From b8c282a366118ea3d1d7f96cf374e5207d5c4dcf Mon Sep 17 00:00:00 2001
+From b37ef79c3e934d88fd0ca4c7250142063e279452 Mon Sep 17 00:00:00 2001
 From: Tim Lunn <tim@feathertop.org>
 Date: Wed, 20 Feb 2013 15:33:26 +1100
-Subject: [PATCH] add versioning to js-config
+Subject: [PATCH] add versioning to js and js-config
 
 ---
- js/src/Makefile.in  | 12 ++++++------
- js/src/configure.in |  4 +++-
- 2 files changed, 9 insertions(+), 7 deletions(-)
+ js/src/Makefile.in       | 8 ++++----
+ js/src/configure.in      | 4 +++-
+ js/src/shell/Makefile.in | 2 +-
+ 3 files changed, 8 insertions(+), 6 deletions(-)
 
 diff --git a/js/src/Makefile.in b/js/src/Makefile.in
-index 28588dd..0c8f6e8 100644
+index ba31ce7..ec893b2 100644
 --- a/js/src/Makefile.in
 +++ b/js/src/Makefile.in
-@@ -854,15 +854,15 @@ JS_CONFIG_SUBSTITUTIONS=\
+@@ -854,13 +854,13 @@ JS_CONFIG_SUBSTITUTIONS=\
  	-DNSPR_CFLAGS="$(NSPR_CFLAGS)" \
  	-DNSPR_PKGCONF_CHECK="$(NSPR_PKGCONF_CHECK)"
  
@@ -21,27 +22,15 @@ index 28588dd..0c8f6e8 100644
  	$(RM) $@.tmp
  	$(PYTHON) $(topsrcdir)/config/Preprocessor.py $(JS_CONFIG_SUBSTITUTIONS) $< > $@.tmp \
 -	&& mv js-config.tmp $@ && chmod +x $@
-+	&& mv $(JS_CONFIG_NAME).tmp $@ && chmod +x $@
++	&& mv $@.tmp $@ && chmod +x $@
  
 -SCRIPTS = js-config
 -SDK_BINARY = js-config
 +SCRIPTS = $(JS_CONFIG_NAME)
 +SDK_BINARY = $(JS_CONFIG_NAME)
  
--$(LIBRARY_NAME).pc: js.pc.in js-config
-+$(LIBRARY_NAME).pc: js.pc.in $(JS_CONFIG_NAME)
+ $(LIBRARY_NAME).pc: js.pc.in
  	$(PYTHON) $(topsrcdir)/config/Preprocessor.py $(JS_CONFIG_SUBSTITUTIONS) $< > $@
- 
- install:: $(LIBRARY_NAME).pc
-@@ -946,7 +946,7 @@ endif
- ifneq (,$(IMPORT_LIBRARY))
- 	$(SYSINSTALL) $(IMPORT_LIBRARY) $(DESTDIR)$(libdir)
- endif
--	$(MAKE) -C shell install
-+	$(MAKE) -C shell
- 
- # Extra dependencies and rules for auto-generated headers
- host_jskwgen.$(OBJ_SUFFIX): jsversion.h vm/Keywords.h
 diff --git a/js/src/configure.in b/js/src/configure.in
 index df95e37..4b7edad 100644
 --- a/js/src/configure.in
@@ -71,8 +60,19 @@ index df95e37..4b7edad 100644
  
  # Build jsctypes if it's enabled.
  if test "$JS_HAS_CTYPES" -a -z "$MOZ_NATIVE_FFI"; then
+diff --git a/js/src/shell/Makefile.in b/js/src/shell/Makefile.in
+index bbf354e..9d3a715 100644
+--- a/js/src/shell/Makefile.in
++++ b/js/src/shell/Makefile.in
+@@ -11,7 +11,7 @@ VPATH		= @srcdir@
+ 
+ include $(DEPTH)/config/autoconf.mk
+ 
+-PROGRAM         = js$(BIN_SUFFIX)
++PROGRAM         = js$(MOZJS_MAJOR_VERSION)$(BIN_SUFFIX)
+ CPPSRCS		= \
+   js.cpp \
+   jsoptparse.cpp \
 -- 
 1.8.1.2
-
-
 
