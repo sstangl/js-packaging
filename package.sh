@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # hg revision against which the patches are intended to apply.
-HGREV="757cf20a83c6"
+HGREV="323e068142c4"
 
 DIRNAME="mozjs17"
 REPODIR="$HOME/dev/mozilla-esr17"
@@ -19,7 +19,7 @@ fi
 hg revert -a
 hg st -un | xargs rm
 rm -rf .pc
-PACKAGEVERSION=17-0.0.2
+PACKAGEVERSION=17-1.0.0.rc0
 
 QUILT_PATCHES="$BUILDDIR/patches" quilt push -a
 if (( $? )); then echo -failed to apply patches; exit 1; fi

@@ -1,8 +1,9 @@
-From 45c5c70c16b933e65f0ea5b2953577435f78388a Mon Sep 17 00:00:00 2001
 From: Tim Lunn <tim@feathertop.org>
 Date: Wed, 20 Feb 2013 15:33:26 +1100
-Subject: [PATCH] add versioning to js and js-config
 
+[PATCH] add versioning to js and js-config
+
+From 45c5c70c16b933e65f0ea5b2953577435f78388a Mon Sep 17 00:00:00 2001
 ---
  js/src/Makefile.in       | 12 ++++++------
  js/src/configure.in      | 16 ++++++++++++++--
@@ -10,19 +11,18 @@ Subject: [PATCH] add versioning to js and js-config
  3 files changed, 21 insertions(+), 9 deletions(-)
 
 diff --git a/js/src/Makefile.in b/js/src/Makefile.in
-index ba31ce7..fe04295 100644
 --- a/js/src/Makefile.in
 +++ b/js/src/Makefile.in
-@@ -641,7 +641,7 @@ endif
+@@ -564,7 +564,7 @@ JITFLAGS = ,m,am,amd,n,mn,amn,amdn,mdn
  check-jit-test::
  	$(wildcard $(RUN_TEST_PROGRAM)) $(PYTHON) -u $(srcdir)/jit-test/jit_test.py \
- 	        --no-slow --no-progress --tinderbox --tbpl $(JITTEST_VALGRIND_FLAG) \
+ 	        --no-slow --no-progress --tinderbox --jitflags=$(JITFLAGS) $(JITTEST_VALGRIND_FLAG) \
 -	        $(DIST)/bin/js$(BIN_SUFFIX)
 +	        $(DIST)/bin/$(JS_SHELL_NAME)$(BIN_SUFFIX)
  
  check:: check-jit-test
  
-@@ -658,7 +658,7 @@ check-jstests:
+@@ -581,7 +581,7 @@ check-jstests:
  				--no-extensions \
  				--timeout 300 \
  				--args="`echo $$f | sed 's/\(.\)/ -\1/g'`" \
@@ -31,7 +31,7 @@ index ba31ce7..fe04295 100644
  			RC=$$(( $$RC || $$?)); \
  		done; \
  	exit $$RC
-@@ -854,13 +854,13 @@ JS_CONFIG_SUBSTITUTIONS=\
+@@ -776,13 +776,13 @@ JS_CONFIG_SUBSTITUTIONS=\
  	-DNSPR_CFLAGS="$(NSPR_CFLAGS)" \
  	-DNSPR_PKGCONF_CHECK="$(NSPR_PKGCONF_CHECK)"
  
@@ -50,10 +50,9 @@ index ba31ce7..fe04295 100644
  $(LIBRARY_NAME).pc: js.pc.in
  	$(PYTHON) $(topsrcdir)/config/Preprocessor.py $(JS_CONFIG_SUBSTITUTIONS) $< > $@
 diff --git a/js/src/configure.in b/js/src/configure.in
-index df95e37..2fbbac2 100644
 --- a/js/src/configure.in
 +++ b/js/src/configure.in
-@@ -233,6 +233,16 @@ MOZJS_MAJOR_VERSION=`echo $MOZILLA_VERSION | sed "s|\(^[0-9]*\)\.[0-9]*.*|\1|"`
+@@ -233,6 +233,16 @@ MOZJS_MAJOR_VERSION=`echo $MOZILLA_VERSI
  MOZJS_MINOR_VERSION=`echo $MOZILLA_VERSION | sed "s|^[0-9]*\.\([0-9]*\).*|\1|"`
  MOZJS_PATCH_VERSION=`echo $MOZILLA_VERSION | sed "s|^[0-9]*\.[0-9]*[^0-9]*||"`
  IS_ALPHA=`echo $MOZILLA_VERSION | grep [ab]`
@@ -79,7 +78,7 @@ index df95e37..2fbbac2 100644
  AC_SUBST(MOZJS_MAJOR_VERSION)
  AC_SUBST(MOZJS_MINOR_VERSION)
  AC_SUBST(MOZJS_PATCH_VERSION)
-@@ -4393,8 +4405,8 @@ AC_OUTPUT($MAKEFILES)
+@@ -4513,8 +4525,8 @@ AC_OUTPUT($MAKEFILES)
  
  # Produce the js-config script at configure time; see the comments for
  # 'js-config' in Makefile.in.
@@ -91,7 +90,6 @@ index df95e37..2fbbac2 100644
  # Build jsctypes if it's enabled.
  if test "$JS_HAS_CTYPES" -a -z "$MOZ_NATIVE_FFI"; then
 diff --git a/js/src/shell/Makefile.in b/js/src/shell/Makefile.in
-index bbf354e..0daccc2 100644
 --- a/js/src/shell/Makefile.in
 +++ b/js/src/shell/Makefile.in
 @@ -11,7 +11,7 @@ VPATH		= @srcdir@
@@ -103,6 +101,3 @@ index bbf354e..0daccc2 100644
  CPPSRCS		= \
    js.cpp \
    jsoptparse.cpp \
--- 
-1.8.1.2
-
