@@ -25,7 +25,11 @@ QUILT_PATCHES="$BUILDDIR/patches" quilt push -a
 if (( $? )); then echo -failed to apply patches; exit 1; fi
 
 cd js/src
-autoconf-2.13; autoconf2.13
+if which autoconf-2.13 > /dev/null; then
+	autoconf-2.13
+else
+	autoconf2.13
+fi
 
 cd "$REPODIR"
 
