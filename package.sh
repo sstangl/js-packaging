@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # hg revision against which the patches are intended to apply.
+# Don't forget to update README.
 HGREV="323e068142c4"
 
 DIRNAME="mozjs17"
@@ -49,5 +50,7 @@ cd "$BUILDDIR"
 
 tar rf ${TARFILE} --transform "s#^#${DIRNAME}/#" patches
 tar rf ${TARFILE} --transform "s#^#${DIRNAME}/#" LICENSE
+tar rf ${TARFILE} --transform "s#^#${DIRNAME}/#" README
+tar rf ${TARFILE} --transform "s#^#${DIRNAME}/#" INSTALL
 
 gzip -f ${TARFILE}
