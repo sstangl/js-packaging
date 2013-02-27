@@ -20,7 +20,7 @@ fi
 hg revert -a
 hg st -un | xargs rm
 rm -rf .pc
-PACKAGEVERSION=17-1.0.0.rc0
+PACKAGEVERSION=17.0-1.0.0.rc0
 
 QUILT_PATCHES="$BUILDDIR/patches" quilt push -a
 if (( $? )); then echo -failed to apply patches; exit 1; fi
