@@ -21,7 +21,7 @@ hg revert -a
 hg st -un | xargs rm
 find -name *.pyc -delete
 rm -rf .pc
-PACKAGEVERSION=17.0.0.rc1.prerelease
+PACKAGEVERSION=17.0.0.rc1
 
 QUILT_PATCHES="$BUILDDIR/patches" quilt push -a
 if (( $? )); then echo -failed to apply patches; exit 1; fi
