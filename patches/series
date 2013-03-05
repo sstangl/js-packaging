@@ -19,4 +19,5 @@ bug618485-jsuword-payload.patch # Not landed on m-c (accidental? ask luke).
 quell-common-warnings.patch # Could be landed, but we can carry it separately.
 quell-jsversion-warning.patch # Should not be landed.
 quell-clang-warnings.patch # The pragma stuff should be landed.
+quell-c++0x-warnings-clang.patch # Possibly should be landed.
 

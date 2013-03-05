@@ -19,6 +19,7 @@ fi
 
 hg revert -a
 hg st -un | xargs rm
+find -name *.pyc -delete
 rm -rf .pc
 PACKAGEVERSION=17.0.0.rc1.prerelease
 
