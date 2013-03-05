@@ -1,4 +1,3 @@
-bug838915-JS_STANDALONE.patch # approval-mozilla-esr17?
 bug835551-required-defines.patch # Landed on m-c, needs green try run + landing on esr17
 bug831552-install-headers.patch # approval-mozilla-esr17?
 
