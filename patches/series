@@ -1,5 +1,4 @@
 bug835551-required-defines.patch # Landed on m-c, needs green try run + landing on esr17
-bug831552-install-headers.patch # approval-mozilla-esr17?
 
 bug809430-add-symbol-versions.patch # r+, needs landing on m-i. Unneeded?
 

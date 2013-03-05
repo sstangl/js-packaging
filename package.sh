@@ -2,7 +2,7 @@
 
 # hg revision against which the patches are intended to apply.
 # Don't forget to update README.
-HGREV="58682dcf381a"
+HGREV="441b8aa4bc66"
 
 DIRNAME="mozjs17"
 REPODIR="$HOME/dev/mozilla-esr17"
