@@ -18,3 +18,4 @@ quell-jsversion-warning.patch # Should not be landed.
 quell-clang-warnings.patch # The pragma stuff should be landed.
 quell-c++0x-warnings-clang.patch # Possibly should be landed.
 
+openbsd-dll-suffix.patch # Already fixed on m-c. Bug 735599, Comment 53
