@@ -4,9 +4,11 @@
 # Don't forget to update README.
 HGREV="c7f42dec3730"
 
-DIRNAME="mozjs17.0.0"
+PROJECTNAME="mozjs"
+PACKAGEVERSION=17.0.0
 REPODIR="$HOME/dev/mozilla-esr17"
 BUILDDIR=$(pwd)
+DIRNAME="${PROJECTNAME}${PACKAGEVERSION}"
 
 
 cd "$REPODIR"
@@ -21,7 +23,6 @@ hg revert -a
 hg st -un | xargs rm
 find -name *.pyc -delete
 rm -rf .pc
-PACKAGEVERSION=17.0.0
 
 QUILT_PATCHES="$BUILDDIR/patches" quilt push -a
 if (( $? )); then echo -failed to apply patches; exit 1; fi
